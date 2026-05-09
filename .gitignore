@@ -1,0 +1,13 @@
+# Go
+bin/
+dist/
+*.test
+*.out
+coverage.*
+
+# Local environment
+.env
+.env.*
+
+# JetBrains IDE local state
+.idea/
