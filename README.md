@@ -1,14 +1,16 @@
 # Go Concurrency Examples
 
-Small, focused Go examples for practicing concurrency patterns and building blocks.
+A Go 1.22+ module that implements and tests a set of practical concurrency patterns and coordination primitives.
 
-The examples cover practical patterns such as resource pooling, bounded worker execution, context cancellation, and deterministic coordination tests.
+The codebase is organized as small, focused introductory examples such as connection pools and worker pools. Each example demonstrates a concurrency technique using the Go standard library and is covered by automated tests.
+
+The repository also includes an [AGENTS.md](AGENTS.md) guide to keep AI-assisted and human contributions consistent across examples, tests, and documentation.
 
 ## Requirements
 
 - Go 1.22+
 
-## Run
+## Build And Test
 
 ```bash
 go test ./...
@@ -21,6 +23,19 @@ go test ./...
 | `connectionpool` | Connection acquisition and release with context timeout, FIFO waiter order, and wait limits |
 | `workerpool` | Fixed-concurrency task execution with result collection and context cancellation |
 
+## Agent Workflow
+
+This repository includes [AGENTS.md](AGENTS.md) to guide AI-assisted and human contributions when adding or updating examples.
+
+Its purpose is to keep the repository consistent as it grows by defining:
+- how new examples should be structured
+- expectations for Go doc comments
+- testing requirements
+- README maintenance rules
+- general code quality and naming conventions
+
+If you add a new example, check `AGENTS.md` before making changes.
+
 ## Project Structure
 
 ```text
@@ -28,10 +43,4 @@ connectionpool/        reusable example package and tests
 workerpool/            reusable example package and tests
 ```
 
-## Naming
-
-The repository name `go-concurrency-examples` is a good fit: it is lowercase, readable, specific, and matches the module path:
-
-```text
-github.com/skp2001vn/go-concurrency-examples
-```
+Each example is a Go package. Package code and package tests live in the same directory, with tests named `*_test.go`.
