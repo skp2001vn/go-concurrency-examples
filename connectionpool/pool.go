@@ -29,6 +29,8 @@ type waiter struct {
 // It lets callers acquire a reusable connection, wait with context cancellation
 // or timeout when the pool is empty, and cap the number of goroutines allowed to
 // wait for a connection at the same time.
+//
+// A Pool is safe for concurrent use by multiple goroutines.
 type Pool struct {
 	mu         sync.Mutex
 	idle       []*Connection
@@ -37,16 +39,25 @@ type Pool struct {
 	maxWaiters int
 }
 
-// Stats is a snapshot of pool state intended for examples, tests, and demos.
+// Stats is a consistent snapshot of a Pool's observable state.
 type Stats struct {
-	Capacity   int
-	Idle       int
-	Waiting    int
+	// Capacity is the total number of connections managed by the pool.
+	Capacity int
+
+	// Idle is the number of connections currently available for acquisition.
+	Idle int
+
+	// Waiting is the number of goroutines currently waiting for a connection.
+	Waiting int
+
+	// MaxWaiters is the maximum number of goroutines allowed to wait.
 	MaxWaiters int
 }
 
 // New creates a pool with size reusable connections and at most maxWaiters
 // goroutines waiting for a busy pool.
+//
+// New returns an error when size is not positive or maxWaiters is negative.
 func New(size int, maxWaiters int) (*Pool, error) {
 	if size <= 0 {
 		return nil, fmt.Errorf("size must be positive: %d", size)
@@ -71,7 +82,7 @@ func New(size int, maxWaiters int) (*Pool, error) {
 //
 // If the context is canceled before a connection is available, Acquire returns
 // the context error. If too many goroutines are already waiting, it returns
-// ErrTooManyWaiters.
+// ErrTooManyWaiters. A nil context is treated as context.Background.
 func (p *Pool) Acquire(ctx context.Context) (*Connection, error) {
 	if ctx == nil {
 		ctx = context.Background()
@@ -108,6 +119,9 @@ func (p *Pool) Acquire(ctx context.Context) (*Connection, error) {
 }
 
 // AcquireTimeout waits up to timeout for a connection.
+//
+// If no connection becomes available before timeout, AcquireTimeout returns
+// context.DeadlineExceeded.
 func (p *Pool) AcquireTimeout(timeout time.Duration) (*Connection, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), timeout)
 	defer cancel()
@@ -116,6 +130,9 @@ func (p *Pool) AcquireTimeout(timeout time.Duration) (*Connection, error) {
 }
 
 // Release returns conn to the pool and wakes the oldest waiter, if any.
+//
+// Callers should release only connections acquired from the same Pool and should
+// release each acquired connection at most once.
 func (p *Pool) Release(conn *Connection) error {
 	if conn == nil {
 		return ErrNilConnection

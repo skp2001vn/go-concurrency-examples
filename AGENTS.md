@@ -37,9 +37,18 @@ Each example should remain:
 - Return errors instead of panicking for normal failure paths.
 - Avoid unnecessary dependencies for small examples.
 
+## Documentation Guidelines
+
+- Add Go doc comments for every exported package, type, function, method, const, var, and exported struct field.
+- Start doc comments with the identifier being documented, such as `Pool` or `Acquire`.
+- Keep comments concise and useful; explain behavior, not implementation mechanics.
+- For concurrency examples, document concurrency safety, blocking behavior, cancellation behavior, channel ownership, zero-value behavior, invalid inputs, and returned errors when relevant.
+- Put package comments in one file per package, usually `doc.go` for packages with more than one source file.
+
 ## Testing Guidelines
 
 - Every new example should include dedicated `go test` coverage.
+- Add a short comment above each `Test...` function explaining the behavior being verified.
 - Tests should validate normal behavior, edge cases, and concurrency coordination behavior.
 - Prefer deterministic tests over timing-sensitive tests.
 - Use short timeout-based guards only to prevent a hung test.

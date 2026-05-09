@@ -7,6 +7,8 @@ import (
 	"time"
 )
 
+// TestAcquireAndReleaseConnection verifies that a released connection can be
+// acquired again by a later caller.
 func TestAcquireAndReleaseConnection(t *testing.T) {
 	pool := mustPool(t, 1, 1)
 
@@ -28,6 +30,8 @@ func TestAcquireAndReleaseConnection(t *testing.T) {
 	}
 }
 
+// TestAcquireReturnsContextErrorWhenTimedOut verifies that acquiring from an
+// empty pool returns the context deadline error when no connection is released.
 func TestAcquireReturnsContextErrorWhenTimedOut(t *testing.T) {
 	pool := mustPool(t, 1, 1)
 	held, err := pool.AcquireTimeout(100 * time.Millisecond)
@@ -49,6 +53,8 @@ func TestAcquireReturnsContextErrorWhenTimedOut(t *testing.T) {
 	}
 }
 
+// TestWaitingAcquireSucceedsAfterConnectionIsReleased verifies that a blocked
+// acquire receives the released connection instead of timing out.
 func TestWaitingAcquireSucceedsAfterConnectionIsReleased(t *testing.T) {
 	pool := mustPool(t, 1, 1)
 	held, err := pool.AcquireTimeout(100 * time.Millisecond)
@@ -87,6 +93,8 @@ func TestWaitingAcquireSucceedsAfterConnectionIsReleased(t *testing.T) {
 	}
 }
 
+// TestRejectsAcquireWhenTooManyGoroutinesAreWaiting verifies that the pool
+// rejects new waiters once maxWaiters has been reached.
 func TestRejectsAcquireWhenTooManyGoroutinesAreWaiting(t *testing.T) {
 	pool := mustPool(t, 1, 1)
 	held, err := pool.AcquireTimeout(100 * time.Millisecond)
@@ -118,6 +126,8 @@ func TestRejectsAcquireWhenTooManyGoroutinesAreWaiting(t *testing.T) {
 	}
 }
 
+// TestReleaseWakesWaitersInFIFOOrder verifies that released connections are
+// handed to waiting goroutines in the order they started waiting.
 func TestReleaseWakesWaitersInFIFOOrder(t *testing.T) {
 	pool := mustPool(t, 1, 2)
 	held, err := pool.AcquireTimeout(100 * time.Millisecond)
