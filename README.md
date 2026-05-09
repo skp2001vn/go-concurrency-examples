@@ -12,7 +12,6 @@ The first example is `connectionpool`, a fixed-size pool that demonstrates guard
 
 ```bash
 go test ./...
-go run ./cmd/connectionpool
 ```
 
 ## Implemented Examples
@@ -25,7 +24,6 @@ go run ./cmd/connectionpool
 
 ```text
 connectionpool/        reusable example package and tests
-cmd/connectionpool/    runnable demo for the example
 ```
 
 ## Naming

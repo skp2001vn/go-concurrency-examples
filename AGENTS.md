@@ -19,8 +19,6 @@ Each example should remain:
 
 - `<example>/`
   - reusable package code and package tests
-- `cmd/<example>/`
-  - runnable demo for the matching example, when useful
 - `README.md`
   - high-level project overview and example list
 
