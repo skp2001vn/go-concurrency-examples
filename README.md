@@ -2,7 +2,7 @@
 
 Small, focused Go examples for practicing concurrency patterns and building blocks.
 
-The first example is `connectionpool`, a fixed-size pool that demonstrates guarded shared state, FIFO waiter coordination, context-based timeout/cancellation, and a maximum waiter limit.
+The examples cover practical patterns such as resource pooling, bounded worker execution, context cancellation, and deterministic coordination tests.
 
 ## Requirements
 
@@ -19,11 +19,13 @@ go test ./...
 | Example | What it demonstrates |
 | --- | --- |
 | `connectionpool` | Connection acquisition and release with context timeout, FIFO waiter order, and wait limits |
+| `workerpool` | Fixed-concurrency task execution with result collection and context cancellation |
 
 ## Project Structure
 
 ```text
 connectionpool/        reusable example package and tests
+workerpool/            reusable example package and tests
 ```
 
 ## Naming
