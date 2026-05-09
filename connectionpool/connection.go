@@ -1,15 +1,14 @@
 package connectionpool
 
-// Connection is a reusable resource managed by a Pool.
+// Connection represents one reusable connection that callers borrow from a Pool.
 //
-// In this example, a Connection only carries a stable ID so tests can verify
-// acquisition and release behavior without depending on a real network or
-// database connection.
+// In this example, the connection only has an ID so callers can tell which
+// connection they received without depending on a real database or network.
 type Connection struct {
 	id int
 }
 
-// ID returns the stable identifier assigned to c when its Pool is created.
+// ID returns the connection's stable identifier.
 func (c *Connection) ID() int {
 	return c.id
 }

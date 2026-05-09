@@ -7,32 +7,33 @@ import (
 	"sync"
 )
 
-// ErrNilTask is recorded in a Result when Run receives a nil Task.
+// ErrNilTask means a submitted job was empty and could not be processed.
 var ErrNilTask = errors.New("workerpool: task is nil")
 
-// Task is a unit of work executed by Run.
+// Task represents one job in a batch.
 //
-// A Task should return nil on success. If ctx is canceled, a Task should stop
-// promptly and return ctx.Err when possible.
+// A Task returns nil after successfully finishing the job. If the caller cancels
+// the batch, the task should stop early when it can.
 type Task func(ctx context.Context) error
 
-// Result describes the outcome of one task submitted to Run.
+// Result tells the caller whether one job succeeded or failed.
 type Result struct {
-	// Index is the task's position in the slice passed to Run.
+	// Index identifies the job in the original batch.
 	Index int
 
-	// Err is the error returned by the task, ErrNilTask for a nil task, or the
-	// context error for a task that was not run because ctx was canceled.
+	// Err is nil when the job succeeds. Otherwise, it explains why that job did
+	// not complete.
 	Err error
 }
 
-// Run executes tasks with at most workers tasks running at the same time.
+// Run completes a batch of jobs without letting too many run at once.
 //
-// Run returns one Result for each task, preserving the original task indexes.
-// If ctx is canceled before all tasks are scheduled, Run stops scheduling new
-// tasks, marks unscheduled tasks with ctx.Err, waits for already-started tasks,
-// and returns the context error. Individual task failures are recorded in the
-// corresponding Result.
+// Use Run when a batch may contain many independent jobs, but the application
+// needs to protect a database, API, CPU budget, or other limited resource. The
+// returned results let callers match each job to its success or failure.
+//
+// If the caller cancels the batch, Run stops starting new jobs, waits for active
+// jobs to finish, and returns the cancellation error.
 func Run(ctx context.Context, workers int, tasks []Task) ([]Result, error) {
 	if workers <= 0 {
 		return nil, fmt.Errorf("workers must be positive: %d", workers)

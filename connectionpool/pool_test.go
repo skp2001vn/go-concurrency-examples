@@ -7,8 +7,8 @@ import (
 	"time"
 )
 
-// TestAcquireAndReleaseConnection verifies that a released connection can be
-// acquired again by a later caller.
+// TestAcquireAndReleaseConnection verifies that a returned connection becomes
+// available for later work.
 func TestAcquireAndReleaseConnection(t *testing.T) {
 	pool := mustPool(t, 1, 1)
 
@@ -30,8 +30,8 @@ func TestAcquireAndReleaseConnection(t *testing.T) {
 	}
 }
 
-// TestAcquireReturnsContextErrorWhenTimedOut verifies that acquiring from an
-// empty pool returns the context deadline error when no connection is released.
+// TestAcquireReturnsContextErrorWhenTimedOut verifies that a caller waiting too
+// long gets a timeout instead of waiting forever.
 func TestAcquireReturnsContextErrorWhenTimedOut(t *testing.T) {
 	pool := mustPool(t, 1, 1)
 	held, err := pool.AcquireTimeout(100 * time.Millisecond)
@@ -53,8 +53,8 @@ func TestAcquireReturnsContextErrorWhenTimedOut(t *testing.T) {
 	}
 }
 
-// TestWaitingAcquireSucceedsAfterConnectionIsReleased verifies that a blocked
-// acquire receives the released connection instead of timing out.
+// TestWaitingAcquireSucceedsAfterConnectionIsReleased verifies that a waiting
+// caller can continue as soon as another caller returns a connection.
 func TestWaitingAcquireSucceedsAfterConnectionIsReleased(t *testing.T) {
 	pool := mustPool(t, 1, 1)
 	held, err := pool.AcquireTimeout(100 * time.Millisecond)
@@ -93,8 +93,8 @@ func TestWaitingAcquireSucceedsAfterConnectionIsReleased(t *testing.T) {
 	}
 }
 
-// TestRejectsAcquireWhenTooManyGoroutinesAreWaiting verifies that the pool
-// rejects new waiters once maxWaiters has been reached.
+// TestRejectsAcquireWhenTooManyGoroutinesAreWaiting verifies that excess demand
+// is rejected once the wait list is full.
 func TestRejectsAcquireWhenTooManyGoroutinesAreWaiting(t *testing.T) {
 	pool := mustPool(t, 1, 1)
 	held, err := pool.AcquireTimeout(100 * time.Millisecond)
@@ -126,8 +126,8 @@ func TestRejectsAcquireWhenTooManyGoroutinesAreWaiting(t *testing.T) {
 	}
 }
 
-// TestReleaseWakesWaitersInFIFOOrder verifies that released connections are
-// handed to waiting goroutines in the order they started waiting.
+// TestReleaseWakesWaitersInFIFOOrder verifies that callers receive connections
+// in the same order they started waiting.
 func TestReleaseWakesWaitersInFIFOOrder(t *testing.T) {
 	pool := mustPool(t, 1, 2)
 	held, err := pool.AcquireTimeout(100 * time.Millisecond)

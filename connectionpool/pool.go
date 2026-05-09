@@ -9,14 +9,14 @@ import (
 )
 
 var (
-	// ErrTooManyWaiters is returned when all connections are busy and the
-	// configured waiter limit has already been reached.
+	// ErrTooManyWaiters means too many callers are already waiting for a
+	// connection.
 	ErrTooManyWaiters = errors.New("too many waiting goroutines")
 
-	// ErrNilConnection is returned when a nil connection is released.
+	// ErrNilConnection means a caller tried to return no connection.
 	ErrNilConnection = errors.New("connection is nil")
 
-	// ErrPoolFull is returned when releasing would exceed the pool capacity.
+	// ErrPoolFull means the pool already has all of its connections back.
 	ErrPoolFull = errors.New("connection pool is full")
 )
 
@@ -24,11 +24,11 @@ type waiter struct {
 	ready chan *Connection
 }
 
-// Pool is a fixed-size, FIFO connection pool.
+// Pool lets callers borrow and return a limited number of connections.
 //
-// It lets callers acquire a reusable connection, wait with context cancellation
-// or timeout when the pool is empty, and cap the number of goroutines allowed to
-// wait for a connection at the same time.
+// Use a Pool to protect a database, external service, or other limited resource
+// from too many simultaneous users. When all connections are borrowed, callers
+// can wait their turn or receive a clear error if the wait list is already full.
 //
 // A Pool is safe for concurrent use by multiple goroutines.
 type Pool struct {
@@ -39,23 +39,23 @@ type Pool struct {
 	maxWaiters int
 }
 
-// Stats is a consistent snapshot of a Pool's observable state.
+// Stats reports current connection availability and demand.
 type Stats struct {
-	// Capacity is the total number of connections managed by the pool.
+	// Capacity is the total number of connections callers can borrow.
 	Capacity int
 
-	// Idle is the number of connections currently available for acquisition.
+	// Idle is the number of connections available right now.
 	Idle int
 
-	// Waiting is the number of goroutines currently waiting for a connection.
+	// Waiting is the number of callers waiting for a connection.
 	Waiting int
 
-	// MaxWaiters is the maximum number of goroutines allowed to wait.
+	// MaxWaiters is the maximum number of callers allowed to wait.
 	MaxWaiters int
 }
 
-// New creates a pool with size reusable connections and at most maxWaiters
-// goroutines waiting for a busy pool.
+// New creates a pool with size connections and room for maxWaiters waiting
+// callers.
 //
 // New returns an error when size is not positive or maxWaiters is negative.
 func New(size int, maxWaiters int) (*Pool, error) {
@@ -78,11 +78,12 @@ func New(size int, maxWaiters int) (*Pool, error) {
 	}, nil
 }
 
-// Acquire returns an idle connection or waits until one is released.
+// Acquire borrows a connection from the pool.
 //
-// If the context is canceled before a connection is available, Acquire returns
-// the context error. If too many goroutines are already waiting, it returns
-// ErrTooManyWaiters. A nil context is treated as context.Background.
+// Acquire returns right away when a connection is available. If all connections
+// are already borrowed, it waits until one is returned, ctx is canceled, or the
+// wait list is full. A full wait list returns ErrTooManyWaiters. A nil context
+// is treated as context.Background.
 func (p *Pool) Acquire(ctx context.Context) (*Connection, error) {
 	if ctx == nil {
 		ctx = context.Background()
@@ -118,7 +119,7 @@ func (p *Pool) Acquire(ctx context.Context) (*Connection, error) {
 	}
 }
 
-// AcquireTimeout waits up to timeout for a connection.
+// AcquireTimeout borrows a connection but gives up after timeout.
 //
 // If no connection becomes available before timeout, AcquireTimeout returns
 // context.DeadlineExceeded.
@@ -129,7 +130,7 @@ func (p *Pool) AcquireTimeout(timeout time.Duration) (*Connection, error) {
 	return p.Acquire(ctx)
 }
 
-// Release returns conn to the pool and wakes the oldest waiter, if any.
+// Release returns a borrowed connection so another caller can use it.
 //
 // Callers should release only connections acquired from the same Pool and should
 // release each acquired connection at most once.
@@ -157,7 +158,7 @@ func (p *Pool) Release(conn *Connection) error {
 	return nil
 }
 
-// Stats returns a consistent snapshot of the pool state.
+// Stats reports pool availability and demand at this moment.
 func (p *Pool) Stats() Stats {
 	p.mu.Lock()
 	defer p.mu.Unlock()

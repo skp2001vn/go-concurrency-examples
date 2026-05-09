@@ -1,6 +1,6 @@
-// Package connectionpool provides a fixed-size connection pool example.
+// Package connectionpool shares a limited set of reusable connections.
 //
-// The package demonstrates guarded shared state, FIFO waiter coordination,
-// context-based cancellation, timeout handling, and waiter limits using only the
-// Go standard library.
+// Use it when connections are expensive or limited, such as database or service
+// connections, and callers need to borrow one, wait briefly, or fail fast when
+// demand is already too high.
 package connectionpool

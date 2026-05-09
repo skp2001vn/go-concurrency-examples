@@ -8,8 +8,8 @@ import (
 	"time"
 )
 
-// TestRunCompletesAllTasks verifies that Run executes every task and returns a
-// result for each original task index.
+// TestRunCompletesAllTasks verifies that a successful batch accounts for every
+// submitted job.
 func TestRunCompletesAllTasks(t *testing.T) {
 	var completed atomic.Int32
 	tasks := []Task{
@@ -42,8 +42,8 @@ func TestRunCompletesAllTasks(t *testing.T) {
 	}
 }
 
-// TestRunLimitsConcurrentTasks verifies that Run never executes more than the
-// configured number of tasks at the same time.
+// TestRunLimitsConcurrentTasks verifies that a batch respects the caller's
+// resource limit.
 func TestRunLimitsConcurrentTasks(t *testing.T) {
 	const workers = 2
 	var running atomic.Int32
@@ -83,8 +83,8 @@ func TestRunLimitsConcurrentTasks(t *testing.T) {
 	}
 }
 
-// TestRunRecordsTaskErrors verifies that task failures are stored on the
-// matching Result instead of stopping unrelated tasks.
+// TestRunRecordsTaskErrors verifies that one failed job is reported without
+// hiding the outcome of other jobs in the batch.
 func TestRunRecordsTaskErrors(t *testing.T) {
 	taskErr := errors.New("task failed")
 	tasks := []Task{
@@ -109,8 +109,8 @@ func TestRunRecordsTaskErrors(t *testing.T) {
 	}
 }
 
-// TestRunStopsSchedulingWhenContextIsCanceled verifies that cancellation stops
-// new tasks from being scheduled while already-started tasks are allowed to end.
+// TestRunStopsSchedulingWhenContextIsCanceled verifies that a canceled batch
+// avoids starting unnecessary work and reports cancellation for unfinished jobs.
 func TestRunStopsSchedulingWhenContextIsCanceled(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	started := make(chan struct{}, 1)
@@ -157,8 +157,8 @@ func TestRunStopsSchedulingWhenContextIsCanceled(t *testing.T) {
 	}
 }
 
-// TestRunRecordsNilTask verifies that nil tasks are reported as task-level
-// errors without panicking.
+// TestRunRecordsNilTask verifies that an empty job is reported as a failed item
+// instead of crashing the whole batch.
 func TestRunRecordsNilTask(t *testing.T) {
 	results, err := Run(context.Background(), 1, []Task{nil})
 	if err != nil {
@@ -170,8 +170,8 @@ func TestRunRecordsNilTask(t *testing.T) {
 	}
 }
 
-// TestRunRejectsInvalidWorkerCount verifies that Run returns an error when the
-// worker count is not positive.
+// TestRunRejectsInvalidWorkerCount verifies that an invalid resource limit is
+// rejected before any batch work starts.
 func TestRunRejectsInvalidWorkerCount(t *testing.T) {
 	results, err := Run(context.Background(), 0, []Task{
 		func(context.Context) error {

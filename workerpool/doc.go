@@ -1,6 +1,6 @@
-// Package workerpool provides a fixed-size worker pool example.
+// Package workerpool helps process large batches without overwhelming a system.
 //
-// The package demonstrates distributing independent tasks across a limited
-// number of goroutines, collecting per-task results, and stopping scheduling
-// when a context is canceled.
+// Use it for work such as sending notifications, calling external APIs, or
+// updating many records when each job is independent but the application still
+// needs a clear limit on how much work is active at once.
 package workerpool
