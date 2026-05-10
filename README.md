@@ -38,9 +38,7 @@ If you add a new example, check `AGENTS.md` before making changes.
 
 ## Project Structure
 
-```text
-connectionpool/        reusable example package and tests
-workerpool/            reusable example package and tests
-```
-
 Each example is a Go package. Package code and package tests live in the same directory, with tests named `*_test.go`.
+
+- `<example>/` contains the example implementation and its tests
+- `README.md` provides the project overview and implemented example list
