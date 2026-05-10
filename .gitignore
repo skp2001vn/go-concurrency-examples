@@ -11,3 +11,4 @@ coverage.*
 
 # JetBrains IDE local state
 .idea/
+/.run/ConnectionPool Tests.run.xml
