@@ -18,15 +18,15 @@ go test ./...
 
 ## Implemented Examples
 
-| Example | What it demonstrates |
-| --- | --- |
-| [`singleflight`](singleflight/) | Duplicate request suppression using a mutex-protected in-flight map and `sync.WaitGroup` result sharing |
-| [`inventory`](inventory/) | Oversell prevention using a mutex to protect shared map state and atomic read-modify-write stock changes |
-| [`bankaccount`](bankaccount/) | Account invariants using mutexes, ordered multi-account locking, and atomic internal identity |
-| [`semaphore`](semaphore/) | Bounded concurrency using a buffered channel as a counting semaphore with blocking, try, and cancellable acquisition |
-| [`connectionpool`](connectionpool/) | Resource borrowing using mutex-protected pool state, FIFO per-waiter channels, wait limits, and context timeouts |
-| [`workerpool`](workerpool/) | Fixed-concurrency batch execution using worker goroutines, job channels, result collection, and context cancellation |
-| [`pipeline`](pipeline/) | Cancellable staged processing that communicates by passing values through channels instead of coordinating shared memory |
+| Example | Business scenario | Technique |
+| --- | --- | --- |
+| [`singleflight`](singleflight/) | Suppress duplicate requests so concurrent callers share one expensive result by key | in-flight map + wait group |
+| [`inventory`](inventory/) | Keep stock counts correct when many buyers try to purchase limited inventory | mutex-protected map |
+| [`bankaccount`](bankaccount/) | Keep account balances correct during deposits, withdrawals, and transfers | ordered locks |
+| [`semaphore`](semaphore/) | Limit how many callers may use a shared resource at the same time | buffered channel |
+| [`connectionpool`](connectionpool/) | Borrow and return a limited set of reusable connections under high demand | mutex + waiter channels |
+| [`workerpool`](workerpool/) | Process a batch of independent jobs without overwhelming a system | workers + job channel |
+| [`pipeline`](pipeline/) | Validate, filter, transform, and collect a batch while allowing cancellation | channel pipeline |
 
 ## Agent Workflow
 
