@@ -20,11 +20,11 @@ go test ./...
 
 | Example | What it demonstrates |
 | --- | --- |
-| `inventory` | Concurrent-safe stock changes with shared map protection and oversell prevention |
-| `bankaccount` | Concurrent-safe deposits, withdrawals, and deadlock-free transfers with business invariants |
-| `semaphore` | Bounded concurrency with blocking acquisition, non-blocking attempts, and context cancellation |
-| `connectionpool` | Connection acquisition and release with context timeout, FIFO waiter order, and wait limits |
-| `workerpool` | Fixed-concurrency task execution with result collection and context cancellation |
+| [`inventory`](inventory/) | Concurrent-safe stock changes with shared map protection and oversell prevention |
+| [`bankaccount`](bankaccount/) | Concurrent-safe deposits, withdrawals, and deadlock-free transfers with business invariants |
+| [`semaphore`](semaphore/) | Bounded concurrency with blocking acquisition, non-blocking attempts, and context cancellation |
+| [`connectionpool`](connectionpool/) | Connection acquisition and release with context timeout, FIFO waiter order, and wait limits |
+| [`workerpool`](workerpool/) | Fixed-concurrency task execution with result collection and context cancellation |
 
 ## Agent Workflow
 
