@@ -20,13 +20,13 @@ go test ./...
 
 | Example | What it demonstrates |
 | --- | --- |
-| [`singleflight`](singleflight/) | Duplicate in-flight work suppression with shared results by key |
-| [`inventory`](inventory/) | Concurrent-safe stock changes with shared map protection and oversell prevention |
-| [`bankaccount`](bankaccount/) | Concurrent-safe deposits, withdrawals, and deadlock-free transfers with business invariants |
-| [`semaphore`](semaphore/) | Bounded concurrency with blocking acquisition, non-blocking attempts, and context cancellation |
-| [`connectionpool`](connectionpool/) | Connection acquisition and release with context timeout, FIFO waiter order, and wait limits |
-| [`workerpool`](workerpool/) | Fixed-concurrency task execution with result collection and context cancellation |
-| [`pipeline`](pipeline/) | Cancellable staged processing with channel ownership, filtering, mapping, and collection |
+| [`singleflight`](singleflight/) | Duplicate request suppression using a mutex-protected in-flight map and `sync.WaitGroup` result sharing |
+| [`inventory`](inventory/) | Oversell prevention using a mutex to protect shared map state and atomic read-modify-write stock changes |
+| [`bankaccount`](bankaccount/) | Account invariants using mutexes, ordered multi-account locking, and atomic internal identity |
+| [`semaphore`](semaphore/) | Bounded concurrency using a buffered channel as a counting semaphore with blocking, try, and cancellable acquisition |
+| [`connectionpool`](connectionpool/) | Resource borrowing using mutex-protected pool state, FIFO per-waiter channels, wait limits, and context timeouts |
+| [`workerpool`](workerpool/) | Fixed-concurrency batch execution using worker goroutines, job channels, result collection, and context cancellation |
+| [`pipeline`](pipeline/) | Cancellable staged processing that communicates by passing values through channels instead of coordinating shared memory |
 
 ## Agent Workflow
 

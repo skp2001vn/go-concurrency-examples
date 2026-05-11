@@ -125,9 +125,11 @@ func Collect(ctx context.Context, in <-chan int) ([]int, error) {
 // Run processes a batch by filtering positive values and squaring them.
 //
 // Run demonstrates a complete pipeline from input values to collected results.
-// It returns accepted results in input order. If ctx is canceled, Run returns
-// the results collected so far and the cancellation error. A nil context is
-// treated as context.Background.
+// Each stage communicates by receiving values from one channel and sending
+// values to the next, so callers can learn a channel-first alternative to
+// shared-memory coordination. It returns accepted results in input order. If
+// ctx is canceled, Run returns the results collected so far and the
+// cancellation error. A nil context is treated as context.Background.
 func Run(ctx context.Context, values []int) ([]int, error) {
 	ctx = backgroundIfNil(ctx)
 	if err := ctx.Err(); err != nil {

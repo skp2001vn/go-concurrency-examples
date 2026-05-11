@@ -42,6 +42,7 @@ Each example should remain:
 - Add Go doc comments for every exported package, type, function, method, const, var, and exported struct field.
 - Start doc comments with the identifier being documented, such as `Pool` or `Acquire`.
 - Keep comments concise and useful; explain the caller-facing purpose before implementation mechanics.
+- In package comments and README descriptions, include both the practical scenario and the concurrency technique the reader should learn, such as mutex-protected shared state, channel-based value passing, worker fan-out, cancellation, or atomic coordination.
 - Prefer business or caller language first, such as jobs, batches, resources, success, failure, and cancellation. Mention goroutines, channels, locks, or other implementation details only when they affect how callers use the API.
 - For concurrency examples, document concurrency safety, blocking behavior, cancellation behavior, channel ownership, zero-value behavior, invalid inputs, and returned errors when relevant.
 - Put package comments in one file per package, usually `doc.go` for packages with more than one source file.
@@ -63,3 +64,4 @@ go test ./...
 
 - Update `README.md` when adding a new example.
 - Keep the implemented example table in sync with the repository.
+- In the implemented example table, describe the business behavior and the specific concurrency technique so readers can quickly see what they will learn.
