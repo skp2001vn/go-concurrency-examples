@@ -1,8 +1,13 @@
-// Package semaphore limits how many callers may use a shared resource at once.
+// Package semaphore limits how many callers may use a shared resource at the
+// same time.
 //
-// Use it to protect a downstream service, CPU-heavy work, or any other limited
-// dependency from too many simultaneous users. Callers can wait for capacity,
-// fail fast, or stop waiting when their context is canceled. The example
-// teaches using a buffered channel as a counting semaphore with blocking,
-// non-blocking, and cancellable acquisition paths.
+// The business logic is a small capacity guard: callers acquire a slot before
+// using a limited dependency, release the slot afterward, try to acquire without
+// waiting, or stop waiting when their context is canceled.
+//
+// The example uses a buffered channel because the channel capacity naturally
+// represents the number of available slots. Sending into the channel acquires a
+// slot, receiving from it releases a slot, and select enables both non-blocking
+// and cancellable acquisition. This technique is compact, standard-library
+// only, and keeps bounded-concurrency behavior visible in the API.
 package semaphore

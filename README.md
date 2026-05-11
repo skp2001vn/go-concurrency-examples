@@ -18,15 +18,15 @@ go test ./...
 
 ## Implemented Examples
 
-| Example | Business scenario | Technique |
-| --- | --- | --- |
-| [`singleflight`](singleflight/) | Suppress duplicate requests so concurrent callers share one expensive result by key | in-flight map + wait group |
-| [`inventory`](inventory/) | Keep stock counts correct when many buyers try to purchase limited inventory | mutex-protected map |
-| [`bankaccount`](bankaccount/) | Keep account balances correct during deposits, withdrawals, and transfers | ordered locks |
-| [`semaphore`](semaphore/) | Limit how many callers may use a shared resource at the same time | buffered channel |
-| [`connectionpool`](connectionpool/) | Borrow and return a limited set of reusable connections under high demand | mutex + waiter channels |
-| [`workerpool`](workerpool/) | Process a batch of independent jobs without overwhelming a system | workers + job channel |
-| [`pipeline`](pipeline/) | Validate, filter, transform, and collect a batch while allowing cancellation | channel pipeline |
+| Example | What it demonstrates |
+| --- | --- |
+| [`singleflight`](singleflight/) | Suppressing duplicate requests so concurrent callers share one expensive result by key, using an in-flight map and wait group |
+| [`inventory`](inventory/) | Keeping stock counts correct when many buyers purchase limited inventory, using a mutex-protected map |
+| [`bankaccount`](bankaccount/) | Keeping balances correct during deposits, withdrawals, and transfers, using ordered locks |
+| [`semaphore`](semaphore/) | Limiting how many callers use a shared resource at once, using a buffered channel |
+| [`connectionpool`](connectionpool/) | Borrowing and returning reusable connections under high demand, using mutex-protected state and waiter channels |
+| [`workerpool`](workerpool/) | Processing independent jobs without overwhelming a system, using workers and a job channel |
+| [`pipeline`](pipeline/) | Validating, filtering, transforming, and collecting a cancellable batch, using a channel pipeline |
 
 ## Agent Workflow
 
