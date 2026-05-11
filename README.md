@@ -2,7 +2,7 @@
 
 A Go 1.22+ module that implements and tests a set of practical concurrency patterns and coordination primitives.
 
-The codebase is organized as small, focused introductory examples such as duplicate request suppression, inventory, bank accounts, semaphores, connection pools, worker pools, and pipelines. Each example demonstrates a concurrency technique using the Go standard library and is covered by automated tests.
+The codebase is organized as small, focused introductory examples such as duplicate request suppression, inventory, bank accounts, semaphores, connection pools, worker pools, pipelines, and rate limiters. Each example demonstrates a concurrency technique using the Go standard library and is covered by automated tests.
 
 The repository also includes an [AGENTS.md](AGENTS.md) guide to keep AI-assisted and human contributions consistent across examples, tests, and documentation.
 
@@ -27,6 +27,7 @@ go test ./...
 | [`connectionpool`](connectionpool/) | Borrowing and returning reusable connections under high demand, using `sync.Mutex`, FIFO waiter channels, and `context.Context` timeouts |
 | [`workerpool`](workerpool/) | Processing independent jobs without overwhelming a system, using goroutines, job channels, `sync.WaitGroup`, and `context.Context` cancellation |
 | [`pipeline`](pipeline/) | Validating, filtering, transforming, and collecting a cancellable batch, using staged channels, channel ownership, and `context.Context` cancellation |
+| [`ratelimiter`](ratelimiter/) | Limiting how often callers perform work over time, using `time.Ticker`, token channels, and `context.Context` cancellation |
 
 ## Agent Workflow
 
