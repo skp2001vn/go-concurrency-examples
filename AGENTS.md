@@ -64,4 +64,4 @@ go test ./...
 
 - Update `README.md` when adding a new example.
 - Keep the implemented example table in sync with the repository.
-- In the implemented example table, use one `What it demonstrates` column that combines the business behavior with a short technique hint.
+- In the implemented example table, use one `What it demonstrates` column that combines the business use case with precise Go concurrency terms.

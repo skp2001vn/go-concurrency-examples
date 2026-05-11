@@ -20,13 +20,13 @@ go test ./...
 
 | Example | What it demonstrates |
 | --- | --- |
-| [`singleflight`](singleflight/) | Suppressing duplicate requests so concurrent callers share one expensive result by key, using an in-flight map and wait group |
-| [`inventory`](inventory/) | Keeping stock counts correct when many buyers purchase limited inventory, using a mutex-protected map |
-| [`bankaccount`](bankaccount/) | Keeping balances correct during deposits, withdrawals, and transfers, using ordered locks |
-| [`semaphore`](semaphore/) | Limiting how many callers use a shared resource at once, using a buffered channel |
-| [`connectionpool`](connectionpool/) | Borrowing and returning reusable connections under high demand, using mutex-protected state and waiter channels |
-| [`workerpool`](workerpool/) | Processing independent jobs without overwhelming a system, using workers and a job channel |
-| [`pipeline`](pipeline/) | Validating, filtering, transforming, and collecting a cancellable batch, using a channel pipeline |
+| [`singleflight`](singleflight/) | Suppressing duplicate requests so concurrent callers share one expensive result by key, using `sync.Mutex`, an in-flight map, and `sync.WaitGroup` |
+| [`inventory`](inventory/) | Keeping stock counts correct when many buyers purchase limited inventory, using `sync.Mutex` to guard shared map state |
+| [`bankaccount`](bankaccount/) | Keeping balances correct during deposits, withdrawals, and transfers, using `sync.Mutex`, deterministic lock ordering, and `sync/atomic` |
+| [`semaphore`](semaphore/) | Limiting how many callers use a shared resource at once, using a buffered channel as a counting semaphore and `context.Context` cancellation |
+| [`connectionpool`](connectionpool/) | Borrowing and returning reusable connections under high demand, using `sync.Mutex`, FIFO waiter channels, and `context.Context` timeouts |
+| [`workerpool`](workerpool/) | Processing independent jobs without overwhelming a system, using goroutines, job channels, `sync.WaitGroup`, and `context.Context` cancellation |
+| [`pipeline`](pipeline/) | Validating, filtering, transforming, and collecting a cancellable batch, using staged channels, channel ownership, and `context.Context` cancellation |
 
 ## Agent Workflow
 
