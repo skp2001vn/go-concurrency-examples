@@ -2,7 +2,7 @@
 
 A Go 1.22+ module that implements and tests a set of practical concurrency patterns and coordination primitives.
 
-The codebase is organized as small, focused introductory examples such as duplicate request suppression, inventory, bank accounts, semaphores, connection pools, and worker pools. Each example demonstrates a concurrency technique using the Go standard library and is covered by automated tests.
+The codebase is organized as small, focused introductory examples such as duplicate request suppression, inventory, bank accounts, semaphores, connection pools, worker pools, and pipelines. Each example demonstrates a concurrency technique using the Go standard library and is covered by automated tests.
 
 The repository also includes an [AGENTS.md](AGENTS.md) guide to keep AI-assisted and human contributions consistent across examples, tests, and documentation.
 
@@ -26,6 +26,7 @@ go test ./...
 | [`semaphore`](semaphore/) | Bounded concurrency with blocking acquisition, non-blocking attempts, and context cancellation |
 | [`connectionpool`](connectionpool/) | Connection acquisition and release with context timeout, FIFO waiter order, and wait limits |
 | [`workerpool`](workerpool/) | Fixed-concurrency task execution with result collection and context cancellation |
+| [`pipeline`](pipeline/) | Cancellable staged processing with channel ownership, filtering, mapping, and collection |
 
 ## Agent Workflow
 
