@@ -2,7 +2,7 @@
 
 A Go 1.22+ module that implements and tests a set of practical concurrency patterns and coordination primitives.
 
-The codebase is organized as small, focused introductory examples such as duplicate request suppression, inventory, bank accounts, semaphores, connection pools, worker pools, pipelines, rate limiters, bounded queues, barriers, pub/sub brokers, task groups, actors, lazy initialization, and atomic counters. Each example demonstrates a concurrency technique using the Go standard library and is covered by automated tests.
+The codebase is organized as small, focused introductory examples such as duplicate request suppression, inventory, bank accounts, semaphores, connection pools, worker pools, pipelines, rate limiters, bounded queues, barriers, pub/sub brokers, task groups, actors, lazy initialization, atomic counters, and batchers. Each example demonstrates a concurrency technique using the Go standard library and is covered by automated tests.
 
 The repository also includes an [AGENTS.md](AGENTS.md) guide to keep AI-assisted and human contributions consistent across examples, tests, and documentation.
 
@@ -35,6 +35,7 @@ go test ./...
 | [`actor`](actor/) | Managing shared state through a single owner goroutine, using command channels, reply channels, and event-loop serialization |
 | [`lazyinit`](lazyinit/) | Initializing an expensive shared resource exactly once for concurrent callers, using `sync.Once` and cached result/error |
 | [`atomiccounter`](atomiccounter/) | Tracking high-frequency request metrics from many goroutines, using `sync/atomic` counters and compare-and-swap updates |
+| [`batcher`](batcher/) | Grouping incoming items into size- or time-based batches, using channels, `time.Timer`, and `context.Context` cancellation |
 
 ## Agent Workflow
 
