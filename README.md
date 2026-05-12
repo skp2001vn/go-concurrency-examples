@@ -2,7 +2,7 @@
 
 A Go 1.22+ module that implements and tests a set of practical concurrency patterns and coordination primitives.
 
-The codebase is organized as small, focused introductory examples such as duplicate request suppression, inventory, bank accounts, semaphores, connection pools, worker pools, pipelines, rate limiters, bounded queues, barriers, pub/sub brokers, task groups, actors, lazy initialization, atomic counters, batchers, and timeout workers. Each example demonstrates a concurrency technique using the Go standard library and is covered by automated tests.
+The codebase is organized as small, focused introductory examples such as duplicate request suppression, inventory, bank accounts, semaphores, connection pools, worker pools, pipelines, rate limiters, bounded queues, barriers, pub/sub brokers, task groups, actors, lazy initialization, atomic counters, batchers, timeout workers, and keyed locks. Each example demonstrates a concurrency technique using the Go standard library and is covered by automated tests.
 
 The repository also includes an [AGENTS.md](AGENTS.md) guide to keep AI-assisted and human contributions consistent across examples, tests, and documentation.
 
@@ -37,6 +37,7 @@ go test ./...
 | [`atomiccounter`](examples/atomiccounter/) | Tracking high-frequency request metrics from many goroutines, using `sync/atomic` counters and compare-and-swap updates |
 | [`batcher`](examples/batcher/) | Grouping incoming items into size- or time-based batches, using channels, `time.Timer`, and `context.Context` cancellation |
 | [`timeoutworker`](examples/timeoutworker/) | Running one operation with a deadline and returning the first result or timeout, using goroutines, result channels, `select`, and `context.WithTimeout` |
+| [`keyedlock`](examples/keyedlock/) | Serializing updates for the same business key while improving throughput for different keys, using per-key mutexes and short global registry locks |
 
 ## Agent Workflow
 
