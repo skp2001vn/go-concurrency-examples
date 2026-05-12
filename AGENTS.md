@@ -17,7 +17,7 @@ Each example should remain:
 
 ## Project Structure
 
-- `<example>/`
+- `examples/<example>/`
   - reusable package code and package tests
 - `README.md`
   - high-level project overview and example list
