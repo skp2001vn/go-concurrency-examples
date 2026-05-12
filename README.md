@@ -2,7 +2,7 @@
 
 A Go 1.22+ module that implements and tests a set of practical concurrency patterns and coordination primitives.
 
-The codebase is organized as small, focused introductory examples such as duplicate request suppression, inventory, bank accounts, semaphores, connection pools, worker pools, pipelines, rate limiters, bounded queues, barriers, and pub/sub brokers. Each example demonstrates a concurrency technique using the Go standard library and is covered by automated tests.
+The codebase is organized as small, focused introductory examples such as duplicate request suppression, inventory, bank accounts, semaphores, connection pools, worker pools, pipelines, rate limiters, bounded queues, barriers, pub/sub brokers, and task groups. Each example demonstrates a concurrency technique using the Go standard library and is covered by automated tests.
 
 The repository also includes an [AGENTS.md](AGENTS.md) guide to keep AI-assisted and human contributions consistent across examples, tests, and documentation.
 
@@ -31,6 +31,7 @@ go test ./...
 | [`boundedqueue`](boundedqueue/) | Coordinating producers and consumers through a fixed-size job queue, using `sync.Mutex`, `sync.Cond`, and close signaling |
 | [`barrier`](barrier/) | Coordinating workers so all finish one phase before any start the next, using `sync.Mutex`, `sync.Cond`, and generation counters |
 | [`pubsub`](pubsub/) | Broadcasting each published message to multiple subscribers, using `sync.RWMutex`, per-subscriber channels, and channel ownership |
+| [`taskgroup`](taskgroup/) | Running related tasks concurrently and canceling the group on first failure, using goroutines, `sync.WaitGroup`, `context.WithCancel`, and first-error capture |
 
 ## Agent Workflow
 
