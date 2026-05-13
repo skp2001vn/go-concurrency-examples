@@ -2,9 +2,11 @@
 
 A Go 1.22+ module that implements and tests a set of practical concurrency patterns and coordination primitives.
 
-The codebase is organized as small, focused introductory examples such as duplicate request suppression, inventory, bank accounts, semaphores, connection pools, worker pools, pipelines, rate limiters, bounded queues, barriers, pub/sub brokers, task groups, actors, lazy initialization, atomic counters, batchers, timeout workers, keyed locks, dining philosophers, and web crawlers. Each example demonstrates a concurrency technique using the Go standard library and is covered by automated tests.
+The codebase is organized as small, focused introductory examples such as  batchers, connection pools, pub/sub brokers, rate limiters, bank accounts, inventory, lazy initialization, bounded queues, pipelines. Each example demonstrates a concurrency technique using the Go standard library and is covered by automated tests.
 
 The repository also includes an [AGENTS.md](AGENTS.md) guide to keep AI-assisted and human contributions consistent across examples, tests, and documentation.
+
+For similar concurrency examples in Java, see [skp2001vn/concurrency](https://github.com/skp2001vn/concurrency).
 
 ## Requirements
 
@@ -18,26 +20,28 @@ go test ./...
 
 ## Implemented Examples
 
+Examples are ordered from simpler concurrency building blocks to examples that combine multiple coordination techniques: shared state first, then coordination patterns, channel-based workflows, and larger composed examples.
+
 | Example | What it demonstrates |
 | --- | --- |
-| [`singleflight`](examples/singleflight/) | Suppressing duplicate requests so concurrent callers share one expensive result by key, using `sync.Mutex`, an in-flight map, and `sync.WaitGroup` |
-| [`inventory`](examples/inventory/) | Keeping stock counts correct when many buyers purchase limited inventory, using `sync.Mutex` to guard shared map state |
+| [`atomiccounter`](examples/atomiccounter/) | Tracking high-frequency request metrics from many goroutines, using `sync/atomic` counters and compare-and-swap updates |
 | [`bankaccount`](examples/bankaccount/) | Keeping balances correct during deposits, withdrawals, and transfers, using `sync.Mutex`, deterministic lock ordering, and `sync/atomic` |
+| [`inventory`](examples/inventory/) | Keeping stock counts correct when many buyers purchase limited inventory, using `sync.Mutex` to guard shared map state |
+| [`keyedlock`](examples/keyedlock/) | Serializing updates for the same business key while improving throughput for different keys, using per-key mutexes and short global registry locks |
+| [`lazyinit`](examples/lazyinit/) | Initializing an expensive shared resource exactly once for concurrent callers, using `sync.Once` and cached result/error |
 | [`semaphore`](examples/semaphore/) | Limiting how many callers use a shared resource at once, using a buffered channel as a counting semaphore and `context.Context` cancellation |
-| [`connectionpool`](examples/connectionpool/) | Borrowing and returning reusable connections under high demand, using `sync.Mutex`, FIFO waiter channels, and `context.Context` timeouts |
-| [`workerpool`](examples/workerpool/) | Processing independent jobs without overwhelming a system, using goroutines, job channels, `sync.WaitGroup`, and `context.Context` cancellation |
-| [`pipeline`](examples/pipeline/) | Validating, filtering, transforming, and collecting a cancellable batch, using staged channels, channel ownership, and `context.Context` cancellation |
 | [`ratelimiter`](examples/ratelimiter/) | Limiting how often callers perform work over time, using `time.Ticker`, token channels, and `context.Context` cancellation |
 | [`boundedqueue`](examples/boundedqueue/) | Coordinating producers and consumers through a fixed-size job queue, using `sync.Mutex`, `sync.Cond`, and close signaling |
 | [`barrier`](examples/barrier/) | Coordinating workers so all finish one phase before any start the next, using `sync.Mutex`, `sync.Cond`, and generation counters |
-| [`pubsub`](examples/pubsub/) | Broadcasting each published message to multiple subscribers, using `sync.RWMutex`, per-subscriber channels, and channel ownership |
-| [`taskgroup`](examples/taskgroup/) | Running related tasks concurrently and canceling the group on first failure, using goroutines, `sync.WaitGroup`, `context.WithCancel`, and first-error capture |
-| [`actor`](examples/actor/) | Managing shared state through a single owner goroutine, using command channels, reply channels, and event-loop serialization |
-| [`lazyinit`](examples/lazyinit/) | Initializing an expensive shared resource exactly once for concurrent callers, using `sync.Once` and cached result/error |
-| [`atomiccounter`](examples/atomiccounter/) | Tracking high-frequency request metrics from many goroutines, using `sync/atomic` counters and compare-and-swap updates |
-| [`batcher`](examples/batcher/) | Grouping incoming items into size- or time-based batches, using channels, `time.Timer`, and `context.Context` cancellation |
+| [`workerpool`](examples/workerpool/) | Processing independent jobs without overwhelming a system, using goroutines, job channels, `sync.WaitGroup`, and `context.Context` cancellation |
+| [`pipeline`](examples/pipeline/) | Validating, filtering, transforming, and collecting a cancellable batch, using staged channels, channel ownership, and `context.Context` cancellation |
 | [`timeoutworker`](examples/timeoutworker/) | Running one operation with a deadline and returning the first result or timeout, using goroutines, result channels, `select`, and `context.WithTimeout` |
-| [`keyedlock`](examples/keyedlock/) | Serializing updates for the same business key while improving throughput for different keys, using per-key mutexes and short global registry locks |
+| [`taskgroup`](examples/taskgroup/) | Running related tasks concurrently and canceling the group on first failure, using goroutines, `sync.WaitGroup`, `context.WithCancel`, and first-error capture |
+| [`batcher`](examples/batcher/) | Grouping incoming items into size- or time-based batches, using channels, `time.Timer`, and `context.Context` cancellation |
+| [`singleflight`](examples/singleflight/) | Suppressing duplicate requests so concurrent callers share one expensive result by key, using `sync.Mutex`, an in-flight map, and `sync.WaitGroup` |
+| [`connectionpool`](examples/connectionpool/) | Borrowing and returning reusable connections under high demand, using `sync.Mutex`, FIFO waiter channels, and `context.Context` timeouts |
+| [`pubsub`](examples/pubsub/) | Broadcasting each published message to multiple subscribers, using `sync.RWMutex`, per-subscriber channels, and channel ownership |
+| [`actor`](examples/actor/) | Managing shared state through a single owner goroutine, using command channels, reply channels, and event-loop serialization |
 | [`diningphilosophers`](examples/diningphilosophers/) | Avoiding deadlock and circular wait when workers need two shared resources, using per-resource mutexes and an N-1 counting semaphore |
 | [`webcrawler`](examples/webcrawler/) | Crawling linked pages once with dynamically discovered work, using worker goroutines, job channels, a mutex-protected scheduled set for deduplication, and `context.Context` cancellation |
 

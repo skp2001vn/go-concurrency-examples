@@ -65,3 +65,5 @@ go test ./...
 - Update `README.md` when adding a new example.
 - Keep the implemented example table in sync with the repository.
 - In the implemented example table, use one `What it demonstrates` column that combines the business use case with precise Go concurrency terms.
+- Keep the implemented example table ordered from simpler concurrency building blocks to examples that combine multiple coordination techniques. When adding an example, insert it where it best fits by complexity and technique, rather than appending it automatically.
+- Keep the short overview list near the top of `README.md` consistent with the implemented example order.
