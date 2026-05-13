@@ -2,7 +2,7 @@
 
 A Go 1.22+ module that implements and tests a set of practical concurrency patterns and coordination primitives.
 
-The codebase is organized as small, focused introductory examples such as duplicate request suppression, inventory, bank accounts, semaphores, connection pools, worker pools, pipelines, rate limiters, bounded queues, barriers, pub/sub brokers, task groups, actors, lazy initialization, atomic counters, batchers, timeout workers, keyed locks, and dining philosophers. Each example demonstrates a concurrency technique using the Go standard library and is covered by automated tests.
+The codebase is organized as small, focused introductory examples such as duplicate request suppression, inventory, bank accounts, semaphores, connection pools, worker pools, pipelines, rate limiters, bounded queues, barriers, pub/sub brokers, task groups, actors, lazy initialization, atomic counters, batchers, timeout workers, keyed locks, dining philosophers, and web crawlers. Each example demonstrates a concurrency technique using the Go standard library and is covered by automated tests.
 
 The repository also includes an [AGENTS.md](AGENTS.md) guide to keep AI-assisted and human contributions consistent across examples, tests, and documentation.
 
@@ -39,6 +39,7 @@ go test ./...
 | [`timeoutworker`](examples/timeoutworker/) | Running one operation with a deadline and returning the first result or timeout, using goroutines, result channels, `select`, and `context.WithTimeout` |
 | [`keyedlock`](examples/keyedlock/) | Serializing updates for the same business key while improving throughput for different keys, using per-key mutexes and short global registry locks |
 | [`diningphilosophers`](examples/diningphilosophers/) | Avoiding deadlock and circular wait when workers need two shared resources, using per-resource mutexes and an N-1 counting semaphore |
+| [`webcrawler`](examples/webcrawler/) | Crawling linked pages once with dynamically discovered work, using worker goroutines, job channels, a mutex-protected scheduled set for deduplication, and `context.Context` cancellation |
 
 ## Agent Workflow
 
